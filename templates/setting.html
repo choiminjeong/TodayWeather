@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Weather</title>
+    <link rel="stylesheet" href="../static/css/signup.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="form">
+            <div class="form-section">
+                <form action="">
+                    <div class="group">
+                        <h3 class="heading">회원 정보 수정</h3>
+                    </div>
+                    
+                    <div class="group control">
+                        <label for='rain'><input type="checkbox" id="rain" /> 강수량이 60% 이상일 때</label>
+                    </div>
+
+                    <div class="group control">
+                        <label for='mise'><input type="checkbox" id="mise" /> 미세먼지가 '나쁨'일 때</label>
+                    </div>
+
+                    <div class="group control">
+                        <label for='heat'><input type="checkbox" id="heat" /> 폭염</label>
+                        <label for='cold'><input type="checkbox" id="cold" /> 한파</label>
+                        <label for='wind'><input type="checkbox" id="wind" /> 태풍</label>
+                        
+                    </div>
+                    <div class="group control mail">
+                        <label for='email' >메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" id="email" /> </label>
+                        
+                    </div>
+                    
+
+                    <div class="group m20">
+
+                        <!-- <input type="submit" onclick="login.html" name="name" class="btn" value="가입 완료"> -->
+                    </div>
+
+                    <div id="map" style="width:600px;height:350px;"></div>
+                    <script type="text/javascript"
+                        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e2a7192e4eccd0a3b0a172b40564af65"></script>
+                    <script type="text/javascript">
+                        document.addEventListener("DOMContentLoaded", function () {
+                            function getLocation(position) {
+
+                                var latitud = position.coords.latitude;
+                                var longitude = position.coords.longitude;
+
+                                var mapContainer = document.getElementById("map")    // 지도를 표시할 DIV
+                                var mapOption = {
+                                    center: new kakao.maps.LatLng(latitud, longitude)    // 지도의 중심좌표
+                                    , level: 3    // 지도의 확대레벨
+                                };
+
+                                // 지도를 생성
+                                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                                // 마커가 표시될 위치
+                                var markerPosition = new kakao.maps.LatLng(latitud, longitude);
+
+                                // 마커를 생성
+                                var marker = new kakao.maps.Marker({ position: markerPosition });
+
+                                // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+                                var mapTypeControl = new kakao.maps.MapTypeControl();
+
+                                // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+                                // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+                                map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+                                // 지도에 확대 축소 컨트롤을 생성한다
+                                var zoomControl = new kakao.maps.ZoomControl();
+
+                                // 지도의 우측에 확대 축소 컨트롤을 추가한다
+                                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+                                marker.setMap(map);
+
+                                // 지도에 클릭 이벤트를 등록합니다
+                                // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+                                kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+
+                                    // 클릭한 위도, 경도 정보를 가져옵니다 
+                                    var latlng = mouseEvent.latLng;
+
+                                    // 마커 위치를 클릭한 위치로 옮깁니다
+                                    marker.setPosition(latlng);
+
+                                    var resultDiv = document.getElementById('clickLatlng');
+
+                                });
+
+                            }
+
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(getLocation, function (error) {
+                                    consol.log(error.message);
+                                });
+                            } else {
+                                consol.log("Geolocation을 지원하지 않는 브라우저 입니다.");
+                            }
+                        });
+
+                    </script>
+
+                    <div class="group m20">
+                        <a href="./relogin.html" class="btn" >수정 완료</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

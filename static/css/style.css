@@ -1,0 +1,14 @@
+body{
+    background-image: url('https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile6.uf.tistory.com%2Fimage%2F1912130D4B66347B0A04FC');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.header{
+    height: 100px;
+    position: fixed;
+    margin-left: 1500px;
+}
+.weather > h3 {
+    margin-left: 300px;
+}
