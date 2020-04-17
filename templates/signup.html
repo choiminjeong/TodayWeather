@@ -7,21 +7,28 @@
     <title>Today's Weather</title>
     <link rel="stylesheet" href="../static/css/signup.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400" rel="stylesheet">
-    <script>
+   <!-- JS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+   <script>
         // 간단한 회원가입 함수입니다.
         // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
          // [확인] 버튼 클릭 시 DB에 회원정보 저장
 
-        function register() {
+        function signup() {
            
             $.ajax({
                 type: "POST",
-                url: "/api/register",
+                url: "/api/signup",
                 data: {
                     id_give: $('#userid').val(), pw_give: $('#userpw').val(), nickname_give: $('#usernick').val(),
-                    rain_give: $('input:checkbox[id='rain']').val(), mise_give: $('input:checkbox[id='mise']').val(),
-                    heat_give: $('input:checkbox[id='heat']').val(), cold_give: $('input:checkbox[id='cold']').val(),
-                    wind_give: $('input:checkbox[id='wind']').val(), email_give: $('input:checkbox[id='email']').val()
+                    rain_give: $('#rain').val(), mise_give: $('#mise').val(),
+                    heat_give: $('#heat').val(), cold_give: $('#cold').val(),
+                    wind_give: $('#wind').val(), email_give: $('#email').val()
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
@@ -157,7 +164,7 @@
                     </script>
 
                     <div class="group m20">
-                        <button onclick="register()" class="btn">가입 완료</button>
+                        <button onclick="signup()" class="btn">가입 완료</button>
                     </div>
                 </form>
             </div>

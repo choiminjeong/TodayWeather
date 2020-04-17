@@ -23,16 +23,16 @@ import hashlib
 ##  HTML을 주는 부분             ##
 #################################
 @app.route('/')
-def home():
+def login():
    return render_template('login.html')
 
-@app.route('/register')
+@app.route('/signup')
 def register():
    return render_template('signup.html')
 
-@app.route('/main')
+@app.route('/contactform')
 def main():
-   return render_template('main.html')
+   return render_template('contactform.html')
 
 #################################
 ##  로그인을 위한 API            ##
@@ -41,8 +41,8 @@ def main():
 # [회원가입 API]
 # id, pw, nickname을 받아서, mongoDB에 저장합니다.
 # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
-@app.route('/api/register', methods=['POST'])
-def api_register():
+@app.route('/api/signup', methods=['POST'])
+def api_signup():
    id_receive = request.form['id_give']
    pw_receive = request.form['pw_give']
    nickname_receive = request.form['nickname_give']
