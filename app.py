@@ -23,16 +23,20 @@ import hashlib
 ##  HTML을 주는 부분             ##
 #################################
 @app.route('/')
+def main():
+   return render_template('contactform.html')
+
+@app.route('/login')
 def login():
    return render_template('login.html')
 
 @app.route('/signup')
-def register():
+def signup():
    return render_template('signup.html')
 
-@app.route('/contactform')
-def main():
-   return render_template('contactform.html')
+# @app.route('/contactform')
+# def main():
+#    return render_template('contactform.html')
 
 #################################
 ##  로그인을 위한 API            ##
@@ -52,18 +56,21 @@ def api_signup():
    cold_receive = request.form['cold_give']
    wind_receive = request.form['wind_give']
    email_receive = request.form['email_give']
+   gu_receive = request.form['gu_give']
+   dong_receive = request.form['dong_give']
 
 
 
    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-   db.user.insert_one({'id':id_receive,'pw':pw_hash,'nick':nickname_receive,
-   'rain': rain_receive, 'mise': mise_receive, 'heat': heat_receive, 'cold': cold_receive,
-   'wind': wind_receive, 'email': email_receive
+
+   db.user.insert_one({'id':id_receive,'pw':pw_hash,'nick':nickname_receive,  'rain': rain_receive, 'mise': mise_receive, 'heat': heat_receive, 'cold': cold_receive,
+   'wind': wind_receive, 'email': email_receive, 'gu': gu_receive, 'dong': dong_receive
+
    })
 
-
    return jsonify({'result': 'success'})
+
 
 # [로그인 API]
 # id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
