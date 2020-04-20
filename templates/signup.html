@@ -7,35 +7,129 @@
     <title>Today's Weather</title>
     <link rel="stylesheet" href="../static/css/signup.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400" rel="stylesheet">
-   <!-- JS -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-   <script>
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=639d5ba0fcd020dd1f17e9d015abed9b&libraries=services"></script>
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e2a7192e4eccd0a3b0a172b40564af65"></script>
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            function getLocation(position) {
+
+                var latitud = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                var mapContainer = document.getElementById("map")    // 지도를 표시할 DIV
+                var mapOption = {
+                    center: new kakao.maps.LatLng(latitud, longitude)    // 지도의 중심좌표
+                    , level: 3    // 지도의 확대레벨
+                };
+
+                // 지도를 생성
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                // 마커가 표시될 위치
+                var markerPosition = new kakao.maps.LatLng(latitud, longitude);
+
+                // 마커를 생성
+                var marker = new kakao.maps.Marker({ position: markerPosition });
+
+                // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+                var mapTypeControl = new kakao.maps.MapTypeControl();
+
+                // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+                // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+                map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+                // 지도에 확대 축소 컨트롤을 생성한다
+                var zoomControl = new kakao.maps.ZoomControl();
+
+                // 지도의 우측에 확대 축소 컨트롤을 추가한다
+                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+                marker.setMap(map);
+
+                // 지도에 클릭 이벤트를 등록합니다
+                // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+                kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+
+                    // 클릭한 위도, 경도 정보를 가져옵니다
+                    var latlng = mouseEvent.latLng;
+
+                    // 마커 위치를 클릭한 위치로 옮깁니다
+                    marker.setPosition(latlng);
+
+                    var resultDiv = document.getElementById('clickLatlng');
+
+                });
+
+
+                var geocoder = new kakao.maps.services.Geocoder();
+
+                var coord = new kakao.maps.LatLng(latitud, longitude);
+                var callback = function (result, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        var address = result[0].address.address_name
+                        console.log(address);
+                        var add = address.split(" ");
+                        console.log(add[0]);
+                    }
+                };
+
+                geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getLocation, function (error) {
+                    consol.log(error.message);
+                });
+            } else {
+                consol.log("Geolocation을 지원하지 않는 브라우저 입니다.");
+            }
+        });
+
+    </script>
+    <script>
         // 간단한 회원가입 함수입니다.
         // 아이디, 비밀번호, 닉네임을 받아 DB에 저장합니다.
-         // [확인] 버튼 클릭 시 DB에 회원정보 저장
+        // [확인] 버튼 클릭 시 DB에 회원정보 저장
 
         function signup() {
-           
+            let rain_give = $("input:checkbox[name='rain']").is(":checked")
+            let mise_give = $("input:checkbox[name='mise']").is(":checked")
+            let heat_give = $("input:checkbox[name='heat']").is(":checked")
+            let cold_give = $("input:checkbox[name='cold']").is(":checked")
+            let wind_give = $("input:checkbox[name='wind']").is(":checked")
+            let email_give = $("input:checkbox[name='email']").is(":checked")
+            let gu_give = callback(add[1])
+            let dong_give = callback(add[2])
+
+
             $.ajax({
                 type: "POST",
                 url: "/api/signup",
                 data: {
-                    id_give: $('#userid').val(), pw_give: $('#userpw').val(), nickname_give: $('#usernick').val(),
-                    rain_give: $('#rain').val(), mise_give: $('#mise').val(),
-                    heat_give: $('#heat').val(), cold_give: $('#cold').val(),
-                    wind_give: $('#wind').val(), email_give: $('#email').val()
+                    id_give: $('.userid').val(), pw_give: $('.userpw').val(), nickname_give: $('.usernick').val(),
+                    rain_give, mise_give, heat_give, cold_give, wind_give, email_give, gu_give, dong_give
+
+
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('회원가입이 완료되었습니다.')
                         window.location.href = '/login'
                     } else {
-                        alert(response['msg'])
+                        alert("회원가입에 실패했습니다")
                     }
                 }
             })
@@ -50,123 +144,44 @@
     <div class="container">
         <div class="form">
             <div class="form-section">
-                <form action="">
-                    <div class="group">
-                        <h3 class="heading">회원가입</h3>
-                    </div>
-                    <div class="group">
-                        <input type="text" name="name" class="control" id="usernick" placeholder="닉네임을 입력하세요">
-                    </div>
-                    <div class="group">
-                        <input type="email" name="name" class="control" id="userid" placeholder="이메일을 입력하세요">
-                    </div>
-                    <div class="group">
-                        <input type="password" name="name" class="control" id="userpw" placeholder="비밀번호를 입력하세요">
-                    </div>
-                    <!--                    <div class="group">-->
-                    <!--                        <input type="password" name="name" class="control" placeholder="비밀번호를 재입력하세요">-->
-                    <!--                    </div>-->
-                    <div class="group control">
-                        <input type="checkbox" name="check" value="rain" id="rain" />강수량이 60%이상 일 때
-                    </div>
+                <div class="group">
+                    <h3 class="heading">회원가입</h3>
+                </div>
+                <div class="group">
+                    <input type="text" class="control usernick" placeholder="닉네임을 입력하세요">
+                </div>
+                <div class="group">
+                    <input type="email" class="control userid" placeholder="이메일을 입력하세요">
+                </div>
+                <div class="group">
+                    <input type="password" class="control userpw" placeholder="비밀번호를 입력하세요">
+                </div>
 
-                    <div class="group control">
-                        <input type="checkbox" name="check" value="mise" id="mise"/> 미세먼지가 '나쁨'일 때
-                        
-                    </div>
+                <div class="group control">
+                    <input type="checkbox" name="rain" value="rain" class="rain" />강수량이 60%이상 일 때
+                </div>
 
-                    <div class="group control">
-                        <input type="checkbox" name="check" value="heat" id="heat"/>폭염
-                        <input type="checkbox" name="check" value="cold" id="cold"/>폭염
-                        <input type="checkbox" name="check" value="wind" id="wind"/>폭염
-                        <!-- <label for='heat'><input type="checkbox" id="heat" /> 폭염</label>
-                        <label for='cold'><input type="checkbox" id="cold" /> 한파</label>
-                        <label for='wind'><input type="checkbox" id="wind" /> 태풍</label> -->
-                    </div>
-                    <div class="group control mail">
-                        <!-- <label for='email'>메일로 알람을 받습니다<input type="checkbox" id="email" /> </label> -->
-                        메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" name="check" value="email" id="email"/>
-                    </div>
+                <div class="group control">
+                    <input type="checkbox" name="mise" value="mise" class="mise" /> 미세먼지가 '나쁨'일 때
 
-                    <div class="group m20">
+                </div>
 
-                        <!-- <input type="submit" onclick="login.html" name="name" class="btn" value="가입 완료"> -->
-                    </div>
+                <div class="group control">
+                    <label for='heat'><input type="checkbox" name="heat" value="heat" class="heat" /> 폭염</label>
+                    <label for='cold'><input type="checkbox" name="cold" value="cold" class="cold" /> 한파</label>
+                    <label for='wind'><input type="checkbox" name="wind" value="wind" class="wind" /> 태풍</label>
+                </div>
+                <div class="group control mail">
 
-                    <div id="map" style="width:600px;height:200px;"></div>
-                    <script type="text/javascript"
-                        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e2a7192e4eccd0a3b0a172b40564af65"></script>
-                    <!-- <script type="text/javascript">
-                       alert("닉네임과 이메일,비밀번호는 변경이 불가 합니다!")
-                    </script> -->
-                    <script type="text/javascript">
-                        document.addEventListener("DOMContentLoaded", function () {
-                            function getLocation(position) {
+                    메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" name="email" value="email" class="email" />
+                </div>
 
-                                var latitud = position.coords.latitude;
-                                var longitude = position.coords.longitude;
+                <div id="map" style="width:600px;height:200px;"></div>
 
-                                var mapContainer = document.getElementById("map")    // 지도를 표시할 DIV
-                                var mapOption = {
-                                    center: new kakao.maps.LatLng(latitud, longitude)    // 지도의 중심좌표
-                                    , level: 3    // 지도의 확대레벨
-                                };
 
-                                // 지도를 생성
-                                var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                                // 마커가 표시될 위치
-                                var markerPosition = new kakao.maps.LatLng(latitud, longitude);
-
-                                // 마커를 생성
-                                var marker = new kakao.maps.Marker({ position: markerPosition });
-
-                                // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-                                var mapTypeControl = new kakao.maps.MapTypeControl();
-
-                                // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
-                                // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
-                                map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-                                // 지도에 확대 축소 컨트롤을 생성한다
-                                var zoomControl = new kakao.maps.ZoomControl();
-
-                                // 지도의 우측에 확대 축소 컨트롤을 추가한다
-                                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-                                marker.setMap(map);
-
-                                // 지도에 클릭 이벤트를 등록합니다
-                                // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-                                kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-
-                                    // 클릭한 위도, 경도 정보를 가져옵니다 
-                                    var latlng = mouseEvent.latLng;
-
-                                    // 마커 위치를 클릭한 위치로 옮깁니다
-                                    marker.setPosition(latlng);
-
-                                    var resultDiv = document.getElementById('clickLatlng');
-
-                                });
-
-                            }
-
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(getLocation, function (error) {
-                                    consol.log(error.message);
-                                });
-                            } else {
-                                consol.log("Geolocation을 지원하지 않는 브라우저 입니다.");
-                            }
-                        });
-
-                    </script>
-
-                    <div class="group m20">
-                        <button onclick="signup()" class="btn">가입 완료</button>
-                    </div>
-                </form>
+                <div class="group m20">
+                    <button onclick="signup()" class="btn">가입 완료</button>
+                </div>
             </div>
         </div>
     </div>
