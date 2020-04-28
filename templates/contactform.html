@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8" />
@@ -7,6 +7,7 @@
 	<script src="http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
 		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
@@ -20,21 +21,25 @@
 	<script>
 		// 로딩 후 바로 실행
 		$(document).ready(function () {
-			console.log('hi')
 			if ($.cookie('mytoken') == undefined) {
 				console.log('not logged in')
 				// mytoken이라는 값으로 쿠키가 없으면, 로그인 창으로 이동시킵니다.
 				alert('먼저 로그인을 해주세요')
 				window.location.href = '/login'
 			} else {
-				console.log('logged in')
 				// 쿠기가 있으면, 유저 정보를 불러옵니다.
 				load_user_info()
+
 			}
 		});
 
 		// 쿠키에 가지고 있는 token을 헤더에 담아서 보냅니다.
 		function load_user_info() {
+			$('#mise_box').hide();
+			$('#heat_box').hide();
+			$('#wind_box').hide();
+			$('#cold_box').hide();
+			$('#rain_box').hide();
 			$.ajax({
 				type: "GET",
 				url: "/api/nick",
@@ -44,6 +49,38 @@
 					if (response['result'] == 'success') {
 						// 올바른 결과값을 받으면 nickname을 입력해줍니다.
 						$('#nickname').text(response['nickname'])
+						if (response['mise_true'] == 'true'){
+							$('#mise_box').show();
+							$('#mise_pm').text(response['mise_pm']);
+							$('#mise').text(response['mise']);
+
+						}
+						if (response['wind_true'] == 'true'){
+							if (response['wind'] != 0){
+								$('wind_box').show();
+								$('#wind').text(response['wind'])
+							}
+						}
+						if (response['rain_true'] == 'true'){
+							if (response['rain'] != 0){
+								$('#rain_box').show();
+								$('#rain').text(response['rain'])
+							}
+						}
+						if (response['cold_true'] == 'true'){
+							$('#cold_box').show();
+							$('#cold').text(response['cold_pm'])
+							if (response['cold'] != 0) {
+								$('#cold').text(response['cold'])
+							}
+						}
+						if(response['heat_true'] == 'true'){
+							$('#heat_box').show();
+							$('#heat').text(response['heat_pm'])
+							if (response['heat'] != 0){
+								$('#heat').text(response['heat'])
+							}
+						}
 					} else {
 						// 에러가 나면 메시지를 띄우고 로그인 창으로 이동합니다.
 						alert(response['msg'])
@@ -59,9 +96,12 @@
 			alert('로그아웃!')
 			window.location.href = '/login'
 		}
+		function setting() {
+			$('.setting').load("setting.html");
+		}
+
+
 	</script>
-
-
 	<style>
 		body,
 		div,
@@ -269,23 +309,60 @@
 
 <body>
 	<div class="info">
-		<button type="button" class="btn btn-link setting" onclick="location.href='./setting.html'">설정</button>
+		<a href="/setting" class="link setting">설정</a>
+		<!--		<button type="button" class="btn btn-link setting" onclick="setting()">설정</button>-->
 	</div>
 	<div id="wrap">
 
 		<h1>날씨가 도착 했습니다!</h1>
 		<div id='form_wrap'>
 			<form>
-				<p>Hello (닉네임)님,</p>
-				<label for="email">오늘의 날씨는 : </label>
-				<textarea name="message" value="Your Message" id="message"></textarea>
+				<div id="result_nick">
+					Hello<span id='nickname'> </span> 님,
+				</div>
+				<label for="email">오늘의 날씨는 :
+
+				</label>
+				<textarea name="message" value="Your Message" id="message">
+					<div id="mise_box">
+					미세먼지 수치가<span id="mise_pm"></span>  입니다
+						<span id="mise"></span>
+					</div>
+				<div id="heat_box">
+					 최고 기온이<span id="heat_pm"></span> 입니다
+						<span id="heat"></span>
+				</div>
+
+				<div id="wind_box">
+					 <span id="wind"></span>태풍 주의보 입니다
+				</div>
+				<div id="cold_box">
+					최고 기온이<span id="cold_pm"></span> 입니다
+					<span id="cold"></span>한파 주의보 입니다
+				</div>
+				<div id="rain_box">
+					강수량이 <span id="rain"></span>입니다
+				</div>
+			</textarea>
 				<p>Best,</p>
 				<label for="TDW">참고 하세요! </label>
 				<!-- <input type="text" name="name" value="" id="name" /> -->
-				<textarea name="TDW" value="Your Message" id="TDW"></textarea>
+				<textarea name="TDW" value="Your Message" id="TDW">
+					{% if weather == mise %}
+					마스크를 착용해 주세요
+					{% elif weather == heat %}
+					 선크림을 꼭 바르시고 더위를 조심하세요!
+					{% elif weather == cold %}
+					두꺼운 외투를 챙기시고 추위를 조심하세요!
+					{% elif weather == wind %}
+					태풍 조심!
+					{% elif weather == rain %}
+					우산을 꼭 챙겨주세요!
+					{% endif %}
+				</textarea>
 				<!-- <label for="email"> </label>
 				<input type="text" name="email" value="" id="email" /> -->
-				<input type="submit" name="submit" value="Now, 즐거운 외출 하세요!" />
+				<input type="text" name="submit" value="Now, 즐거운 외출 하세요!" />
 			</form>
 		</div>
 	</div>
