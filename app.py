@@ -72,7 +72,7 @@ def api_signup():
    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
 
-   db.user.insert_one({'id':id_receive,'pw':pw_hash,'nick':nickname_receive,  'rain': rain_receive, 'mise': mise_receive, 'heat': heat_receive, 'cold': cold_receive,
+   db.user.insert_one({'id':id_receive,'pw':pw_hash,'nick':nickname_receive, 'rain': rain_receive, 'mise': mise_receive, 'heat': heat_receive, 'cold': cold_receive,
    'wind': wind_receive, 'email': email_receive, 'address': address_receive
 
    })
@@ -90,10 +90,6 @@ def api_login():
    id_receive = request.form['id_give']
    pw_receive = request.form['pw_give']
 
-   #    return render_template('contactform.html', nick=nick)
-
-
-
    # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
@@ -108,7 +104,7 @@ def api_login():
       # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
       payload = {
          'id': id_receive,
-         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=86400)
       }
       token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
@@ -147,7 +143,7 @@ def api_valid():
       heat_true = userinfo['heat']
       cold_true = userinfo['cold']
       wind_true = userinfo['wind']
-      print('rain_true'+rain_true)
+   
 
 
 
@@ -166,7 +162,7 @@ def api_valid():
       dong = address[2]
       print('si' + si+'si2'+si2+'gu'+gu+'dong'+dong)
 
-      with open('C:\\Users\\suk93\\Desktop\\TodayWeather\\templates\\keys.json') as json_file:
+        with open('C:\\Users\\suk93\\Desktop\\TodayWeather\\templates\\keys.json') as json_file:
          json_data = json.load(json_file)
          SERVICE_KEY = json_data["mise_secret_key"]
 
@@ -305,20 +301,20 @@ def api_valid():
       heat_val = 0
       cold_val = 0
 
-      if int(mise) >= int("80"):
-         mise_val = mise
-      if int(POP_val) >= int("60"):
-         rain_val = POP_val
-      if float(WSD_val) >= int("17"):
-         wind_val = WSD_val
-      if float(TMX_val) >= int("34"):
-         heat_val = TMX_val
-      if float(TMN_val) <= int("12"):
-         cold_val = TMN_val
+      # if int(mise) >= int("80"):
+      #    mise_val = mise
+      # if int(POP_val) >= int("60"):
+      #    rain_val = POP_val
+      # if float(WSD_val) >= int("17"):
+      #    wind_val = WSD_val
+      # if float(TMX_val) >= int("34"):
+      #    heat_val = TMX_val
+      # if float(TMN_val) <= int("12"):
+      #    cold_val = TMN_val
 
       return jsonify(
-         {'result': 'success', 'nickname': nick, 'wind': wind_val, 'rain': rain_val, 'heat': heat_val, 'cold': cold_val, 'cold_pm': TMN_val, 'heat_pm': TMX_val,
-          'mise': mise_val, 'mise_pm': mise, 'rain_true': rain_true,'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
+         {'result': 'success', 'nickname': nick, 'wind': int(WSD_val), 'rain': int(POP_val), 'cold_pm': int(TMN_val), 'heat_pm': int(TMX_val),
+         'mise_pm': int(mise), 'rain_true': rain_true, 'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
 
    except jwt.ExpiredSignatureError:
       # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
