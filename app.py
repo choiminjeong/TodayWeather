@@ -191,7 +191,7 @@ def api_valid():
          reader = csv.DictReader(csvfile)
 
          for row in reader:
-            if si2 == row['1단계'] and gu == row['2단계'] and dong == row['3단계']:
+            if gu == row['2단계'] and dong == row['3단계']:
                X = row['격자 X']
                Y = row['격자 Y']
       print('mise' + mise)
@@ -213,104 +213,87 @@ def api_valid():
          Ditem = list(Ditems)
          fcstTime = Ditem[4].text
          fcstValue = Ditem[5].text
-         if (Ditem[2].text == "POP"):  # 강수량
+         if (Ditem[2].text == "POP"):  # rain
             if (Ditem[3].text == date):
-               if (int(0000) <= int(time) and int("0300") > int(time)):
-                  if (Ditem[4].text == "0000"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("0300") <= int(time) and int("0600") > int(time)):
-                  if (Ditem[4].text == "0300"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("0600") <= int(time) and int("0900") > int(time)):
-                  if (Ditem[4].text == "0600"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("0900") <= int(time) and int("1200") > int(time)):
-                  if (Ditem[4].text == "0900"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("1200") <= int(time) and int("1500") > int(time)):
-                  if (Ditem[4].text == "1200"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("1500") <= int(time) and int("1800") > int(time)):
-                  if (Ditem[4].text == "1500"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               elif (int("1800") <= int(time) and int("2100") > int(time)):
-                  if (Ditem[4].text == "1800"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
-               else:
-                  if (Ditem[4].text == "2100"):
-                     POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                  if (int(0000) <= int(time) and int("0300") > int(time)):
+                     if (Ditem[4].text == "0000"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  elif (int("0300") <= int(time) and int("0600") > int(time)):
+                     if (Ditem[4].text == "0300"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val) 
+                  elif (int("0600") <= int(time) and int("0900") > int(time)):
+                     if (Ditem[4].text == "0600"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  elif (int("0900") <= int(time) and int("1200") > int(time)):
+                     if (Ditem[4].text == "0900"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  elif (int("1200") <= int(time) and int("1500") > int(time)):
+                     if (Ditem[4].text == "1200"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  elif (int("1500") <= int(time) and int("1800") > int(time)):
+                     if (Ditem[4].text == "1500"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  elif (int("1800") <= int(time) and int("2100") > int(time)):
+                     if (Ditem[4].text == "1800"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
+                  else:
+                     if (Ditem[4].text == "2100"):
+                        POP_val = fcstValue
+                        print(Ditem[2].text, fcstTime, POP_val)
 
-         if (Ditem[2].text == "WSD"):  # 풍속
+         if (Ditem[2].text == "WSD"):  # wind speed
             if (Ditem[3].text == date):
-               if (int(0000) <= int(time) and int("0300") > int(time)):
-                  if (Ditem[4].text == "0000"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("0300") <= int(time) and int("0600") > int(time)):
-                  if (Ditem[4].text == "0300"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("0600") <= int(time) and int("0900") > int(time)):
-                  if (Ditem[4].text == "0600"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("0900") <= int(time) and int("1200") > int(time)):
-                  if (Ditem[4].text == "0900"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("1200") <= int(time) and int("1500") > int(time)):
-                  if (Ditem[4].text == "1200"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("1500") <= int(time) and int("1800") > int(time)):
-                  if (Ditem[4].text == "1500"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               elif (int("1800") <= int(time) and int("2100") > int(time)):
-                  if (Ditem[4].text == "1800"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
-               else:
-                  if (Ditem[4].text == "2100"):
-                     WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                  if (int(0000) <= int(time) and int("0300") > int(time)):
+                     if (Ditem[4].text == "0000"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("0300") <= int(time) and int("0600") > int(time)):
+                     if (Ditem[4].text == "0300"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("0600") <= int(time) and int("0900") > int(time)):
+                     if (Ditem[4].text == "0600"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("0900") <= int(time) and int("1200") > int(time)):
+                     if (Ditem[4].text == "0900"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("1200") <= int(time) and int("1500") > int(time)):
+                     if (Ditem[4].text == "1200"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("1500") <= int(time) and int("1800") > int(time)):
+                     if (Ditem[4].text == "1500"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  elif (int("1800") <= int(time) and int("2100") > int(time)):
+                     if (Ditem[4].text == "1800"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val)
+                  else:
+                     if (Ditem[4].text == "2100"):
+                        WSD_val = fcstValue
+                        print(Ditem[2].text, fcstTime, WSD_val) 
 
-         if (Ditem[2].text == 'TMX'):  # 최고온도 1500
+         if (Ditem[2].text == 'TMX'):  # temp max
             if (Ditem[3].text == date):
-               TMX_val = fcstValue
-               print(Ditem[2].text, fcstTime, TMX_val)  # category
+                  TMX_val = fcstValue
+                  print(Ditem[2].text, fcstTime, TMX_val)
 
-         if (Ditem[2].text == "TMN"):
+         if (Ditem[2].text == "TMN"): # temp min
             TMN_val = fcstValue
-            print(Ditem[2].text, fcstTime, TMN_val)  # category
-      # 정의
-      mise_val = 0
-      rain_val = 0
-      wind_val = 0
-      heat_val = 0
-      cold_val = 0
-
-      # if int(mise) >= int("80"):
-      #    mise_val = mise
-      # if int(POP_val) >= int("60"):
-      #    rain_val = POP_val
-      # if float(WSD_val) >= int("17"):
-      #    wind_val = WSD_val
-      # if float(TMX_val) >= int("34"):
-      #    heat_val = TMX_val
-      # if float(TMN_val) <= int("12"):
-      #    cold_val = TMN_val
+            print(Ditem[2].text, fcstTime, TMN_val)
 
       return jsonify(
-         {'result': 'success', 'nickname': nick, 'wind': int(WSD_val), 'rain': int(POP_val), 'cold': int(TMN_val), 'heat': int(TMX_val),
+         {'result': 'success', 'nickname': nick, 'wind': float(WSD_val), 'rain': float(POP_val), 'cold': float(TMN_val), 'heat': float(TMX_val),
          'mise': int(mise), 'rain_true': rain_true, 'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
 
    except jwt.ExpiredSignatureError:
