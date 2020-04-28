@@ -51,32 +51,32 @@
 						$('#nickname').text(response['nickname'])
 						console.log(response)
 						if (response['mise_true'] == 'true') {
-							let mise_pm = response['mise_pm']
-							$('#mise_pm').text(mise_pm);
+							let mise_val = response['mise']
+							$('#mise_val').text(mise_val);
 							$('#mise_box').show();
-							if (mise_pm > 80) { $('#mise').show(); } else { $('#mise').hide(); }
+							if (mise_val > 80) { $('#mise').show(); } else { $('#mise').hide(); }
 						}
 						if (response['wind_true'] == 'true') {
-							let wind = response['wind']
-							if (wind > 17) { $('wind').show() } else { $('wind').hide() }
+							let wind_val = response['wind']
+							if (wind_val > 17) { $('wind').show() } else { $('wind').hide() }
 						}
 						if (response['rain_true'] == 'true') {
-							let rain_pm = response['rain']
-							$('#rain_pm').text(rain_pm)
+							let rain_val = response['rain']
+							$('#rain_val').text(rain_val)
 							$('#rain_box').show()
-							if (rain_pm > 60) { $('#rain').show(); } else { $('#rain').hide(); }
+							if (rain_val > 60) { $('#rain').show(); } else { $('#rain').hide(); }
 						}
 						if (response['cold_true'] == 'true') {
-							let cold_pm = response['cold_pm']
-							$('#cold_pm').text(cold_pm)
+							let cold_val = response['cold']
+							$('#cold_val').text(cold_val)
 							$('#cold_box').show()
-							if (cold_pm < 12) { $('#cold').show() } else { $('#cold').hide() }
+							if (cold_val < 12) { $('#cold').show() } else { $('#cold').hide() }
 						}
 						if (response['heat_true'] == 'true') {
-							let heat_pm = response['heat_pm']
-							$('#heat_pm').text(heat_pm)
+							let heat_val = response['heat']
+							$('#heat_val').text(heat_val)
 							$('#heat_box').show()
-							if (heat_pm > 34) { $('heat').show() } else { $('heat').show() }
+							if (heat_val > 34) { $('heat').show() } else { $('heat').show() }
 						}
 					} else {
 						// 에러가 나면 메시지를 띄우고 로그인 창으로 이동합니다.
@@ -325,16 +325,16 @@
 				</div>
 
 				<div id="mise_box">
-					미세먼지 수치가 <span id="mise_pm"></span> 입니다
+					미세먼지 수치가 <span id="mise_val"></span> 입니다
 				</div>
 				<div id="heat_box">
-					최고 기온이 <span id="heat_pm"></span> 입니다
+					최고 기온이 <span id="heat_val"></span> 입니다
 				</div>
 				<div id="cold_box">
-					최고 기온이 <span id="cold_pm"></span> 입니다
+					최고 기온이 <span id="cold_val"></span> 입니다
 				</div>
 				<div id="rain_box">
-					강수량이 <span id="rain_pm"></span>입니다
+					강수량이 <span id="rain_val"></span>입니다
 				</div>
 
 				<div>참고 하세요!</div>

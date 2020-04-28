@@ -143,9 +143,6 @@ def api_valid():
       heat_true = userinfo['heat']
       cold_true = userinfo['cold']
       wind_true = userinfo['wind']
-   
-
-
 
       # API 연결하기
       # nick 으로 address 찾아서 해당 주소의 날씨 뽑아오기
@@ -162,9 +159,9 @@ def api_valid():
       dong = address[2]
       print('si' + si+'si2'+si2+'gu'+gu+'dong'+dong)
 
-        with open('C:\\Users\\suk93\\Desktop\\TodayWeather\\templates\\keys.json') as json_file:
-         json_data = json.load(json_file)
-         SERVICE_KEY = json_data["mise_secret_key"]
+      # with open('C:\\Users\\suk93\\Desktop\\TodayWeather\\templates\\keys.json') as json_file:
+      #    json_data = json.load(json_file)
+      SERVICE_KEY = "EYQKHNA9sAcmcB2Ys%2B9IFgTf9cFZ0Z6bgZmMeYpTjR16rqGDXlpWahaJxWJ68zkJIUbUfhs7cTxL5PRfFjYT7w%3D%3D"
 
       URI = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst?serviceKey="
       items = "&numOfRows=31"
@@ -313,8 +310,8 @@ def api_valid():
       #    cold_val = TMN_val
 
       return jsonify(
-         {'result': 'success', 'nickname': nick, 'wind': int(WSD_val), 'rain': int(POP_val), 'cold_pm': int(TMN_val), 'heat_pm': int(TMX_val),
-         'mise_pm': int(mise), 'rain_true': rain_true, 'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
+         {'result': 'success', 'nickname': nick, 'wind': int(WSD_val), 'rain': int(POP_val), 'cold': int(TMN_val), 'heat': int(TMX_val),
+         'mise': int(mise), 'rain_true': rain_true, 'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
 
    except jwt.ExpiredSignatureError:
       # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
