@@ -58,7 +58,6 @@ def api_signup():
    heat_receive = request.form['heat_give']
    cold_receive = request.form['cold_give']
    wind_receive = request.form['wind_give']
-   email_receive = request.form['email_give']
    address_receive = request.form['address_give']
 
    id_result = db.user.find_one({'id': id_receive})
@@ -73,7 +72,7 @@ def api_signup():
 
 
    db.user.insert_one({'id':id_receive,'pw':pw_hash,'nick':nickname_receive,  'rain': rain_receive, 'mise': mise_receive, 'heat': heat_receive, 'cold': cold_receive,
-   'wind': wind_receive, 'email': email_receive, 'address': address_receive
+   'wind': wind_receive, 'address': address_receive
 
    })
 
@@ -333,12 +332,11 @@ def api_setting():
    heat_receive = request.form['heat_give']
    cold_receive = request.form['cold_give']
    wind_receive = request.form['wind_give']
-   email_receive = request.form['email_give']
    address_receive = request.form['address_give']
 
    db.user.update_one({'nick': nick_receive}, {'$set': {'rain': rain_receive, 'mise': mise_receive,
                                                         'heat': heat_receive, 'cold': cold_receive,
-                                                        'wind': wind_receive, 'email': email_receive,
+                                                        'wind': wind_receive,
                                                         'address': address_receive}})
 
 
