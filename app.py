@@ -77,8 +77,6 @@ def api_signup():
 
    })
 
-
-
    return jsonify({'result': 'success'})
 
 
@@ -119,7 +117,7 @@ def api_login():
 # 로그인된 유저만 call 할 수 있는 API입니다.
 # 유효한 토큰을 줘야 올바른 결과를 얻어갈 수 있습니다.
 # (그렇지 않으면 남의 장바구니라든가, 정보를 누구나 볼 수 있겠죠?)
-@app.route('/api/nick', methods=['GET'])
+@app.route('/api/nick', methods=['GET','POST'])
 def api_valid():
    # 토큰을 주고 받을 때는, 주로 header에 저장해서 넘겨주는 경우가 많습니다.
    # header로 넘겨주는 경우, 아래와 같이 받을 수 있습니다.
@@ -311,12 +309,12 @@ def api_setting():
    wind_receive = request.form['wind_give']
    email_receive = request.form['email_give']
    address_receive = request.form['address_give']
-
+   print(nick_receive)
+   print(rain_receive)
    db.user.update_one({'nick': nick_receive}, {'$set': {'rain': rain_receive, 'mise': mise_receive,
                                                         'heat': heat_receive, 'cold': cold_receive,
                                                         'wind': wind_receive, 'email': email_receive,
                                                         'address': address_receive}})
-
 
    return jsonify({'result': 'success'})
 
