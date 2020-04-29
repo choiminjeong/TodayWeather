@@ -150,9 +150,13 @@
 			margin-bottom: 20px;
 			text-align: center;
 			font-size: 48px;
-			text-shadow: 0 1px 0 #ede8d9;
+			text-shadow: 0
+			1px 0 #ede8d9;
 		}
 
+		#result_nick{
+			font-size:30px;
+			}
 
 		#form_wrap {
 			overflow: hidden;
@@ -223,9 +227,9 @@
 			height: 530px;
 		}
 
-		label {
+		.label {
 			margin: 11px 20px 0 0;
-			font-size: 16px;
+			font-size: 20px;
 			color: #b3aba1;
 			text-transform: uppercase;
 			text-shadow: 0px 1px 0px #fff;
@@ -318,12 +322,13 @@
 		<h1>날씨가 도착 했습니다!</h1>
 		<div id='form_wrap'>
 			<div id='form'>
-				<div>
+				<div id="result_nick">
 					안녕하세요 <span id='nickname'></span> 님,
-					<br />
+				</div>
+				<div class="label" style=" text-decoration: underline;">
 					오늘의 날씨는
 				</div>
-
+				<div class="message">
 				<div id="mise_box">
 					미세먼지 수치가 <span id="mise_val"></span> 입니다
 				</div>
@@ -336,8 +341,8 @@
 				<div id="rain_box">
 					강수량이 <span id="rain_val"></span>입니다
 				</div>
-
-				<div>참고 하세요!</div>
+				</div>
+				<div class="label" style=" text-decoration: underline;">참고 하세요!</div>
 				<div id="mise" class="not-show">마스크를 착용해 주세요</div>
 				<div id="wind" class="not-show">태풍 주의보 입니다</div>
 				<div id="rain" class="not-show">우산을 꼭 챙겨주세요</div>
