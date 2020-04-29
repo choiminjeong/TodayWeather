@@ -89,10 +89,6 @@ def api_login():
    id_receive = request.form['id_give']
    pw_receive = request.form['pw_give']
 
-   #    return render_template('contactform.html', nick=nick)
-
-
-
    # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
@@ -107,7 +103,7 @@ def api_login():
       # exp에는 만료시간을 넣어줍니다. 만료시간이 지나면, 시크릿키로 토큰을 풀 때 만료되었다고 에러가 납니다.
       payload = {
          'id': id_receive,
-         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=30)
+         'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=2000)
       }
       token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
@@ -122,7 +118,7 @@ def api_login():
 # 로그인된 유저만 call 할 수 있는 API입니다.
 # 유효한 토큰을 줘야 올바른 결과를 얻어갈 수 있습니다.
 # (그렇지 않으면 남의 장바구니라든가, 정보를 누구나 볼 수 있겠죠?)
-@app.route('/api/nick', methods=['GET'])
+@app.route('/api/nick', methods=['GET','POST'])
 def api_valid():
    # 토큰을 주고 받을 때는, 주로 header에 저장해서 넘겨주는 경우가 많습니다.
    # header로 넘겨주는 경우, 아래와 같이 받을 수 있습니다.
@@ -167,7 +163,7 @@ def api_valid():
 
       with open('C:\\Users\\suk93\\Desktop\\TodayWeather\\templates\\keys.json') as json_file:
          json_data = json.load(json_file)
-         SERVICE_KEY = json_data["mise_secret_key"]
+         SERVICE_KEY = json_data["secret_key"]
 
       URI = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst?serviceKey="
       items = "&numOfRows=31"
@@ -176,7 +172,7 @@ def api_valid():
       SidoName = "&sidoName=" + si
       searchCondition = "&searchCondition=HOUR"
       URI = URI + SERVICE_KEY + items + PageNum + SidoName + searchCondition
-
+      print(URI)
       response = requests.get(URI)  # REQUST로 데이터 요청하기
       soup = BeautifulSoup(response.text, 'html.parser')
       ItemList = soup.findAll('item')
@@ -186,6 +182,7 @@ def api_valid():
       WSD_val = 0
       TMX_val = 0
       TMN_val = 0
+      fcstTime = 0
       X = ""
       Y = ""
 
@@ -210,6 +207,7 @@ def api_valid():
       Dy = "&ny=" + Y
 
       DURI = DURI + SERVICE_KEY + PageNum + Ditems + DdataType + Dbase_date + Dbase_time + Dx + Dy
+      print(DURI)
 
       Dresponse = requests.get(DURI)  # REQUST로 데이터 요청하기
       soup = BeautifulSoup(Dresponse.text, 'html.parser')
@@ -219,109 +217,94 @@ def api_valid():
          Ditem = list(Ditems)
          fcstTime = Ditem[4].text
          fcstValue = Ditem[5].text
-         if (Ditem[2].text == "POP"):  # 강수량
+         if (Ditem[2].text == "POP"):  # rain
             if (Ditem[3].text == date):
                if (int(0000) <= int(time) and int("0300") > int(time)):
                   if (Ditem[4].text == "0000"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("0300") <= int(time) and int("0600") > int(time)):
                   if (Ditem[4].text == "0300"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("0600") <= int(time) and int("0900") > int(time)):
                   if (Ditem[4].text == "0600"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("0900") <= int(time) and int("1200") > int(time)):
                   if (Ditem[4].text == "0900"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("1200") <= int(time) and int("1500") > int(time)):
                   if (Ditem[4].text == "1200"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("1500") <= int(time) and int("1800") > int(time)):
                   if (Ditem[4].text == "1500"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                elif (int("1800") <= int(time) and int("2100") > int(time)):
                   if (Ditem[4].text == "1800"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
                else:
                   if (Ditem[4].text == "2100"):
                      POP_val = fcstValue
-                     print(Ditem[2].text, fcstTime, POP_val)  # category
+                     print(Ditem[2].text, fcstTime, POP_val)
 
-         if (Ditem[2].text == "WSD"):  # 풍속
+         if (Ditem[2].text == "WSD"):  # wind speed
             if (Ditem[3].text == date):
                if (int(0000) <= int(time) and int("0300") > int(time)):
                   if (Ditem[4].text == "0000"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("0300") <= int(time) and int("0600") > int(time)):
                   if (Ditem[4].text == "0300"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("0600") <= int(time) and int("0900") > int(time)):
                   if (Ditem[4].text == "0600"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("0900") <= int(time) and int("1200") > int(time)):
                   if (Ditem[4].text == "0900"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("1200") <= int(time) and int("1500") > int(time)):
                   if (Ditem[4].text == "1200"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("1500") <= int(time) and int("1800") > int(time)):
                   if (Ditem[4].text == "1500"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                elif (int("1800") <= int(time) and int("2100") > int(time)):
                   if (Ditem[4].text == "1800"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
                else:
                   if (Ditem[4].text == "2100"):
                      WSD_val = fcstValue
-                     print(Ditem[2].text, fcstTime, WSD_val)  # category
+                     print(Ditem[2].text, fcstTime, WSD_val)
 
-         if (Ditem[2].text == 'TMX'):  # 최고온도 1500
+         if (Ditem[2].text == 'TMX'):  # temp max
             if (Ditem[3].text == date):
                TMX_val = fcstValue
-               print(Ditem[2].text, fcstTime, TMX_val)  # category
+               print(Ditem[2].text, fcstTime, TMX_val)
 
-         if (Ditem[2].text == "TMN"):
+         if (Ditem[2].text == "TMN"):  # temp min
             TMN_val = fcstValue
-            print(Ditem[2].text, fcstTime, TMN_val)  # category
-      # 정의
-      mise_val = 0
-      rain_val = 0
-      wind_val = 0
-      heat_val = 0
-      cold_val = 0
-
-      if int(mise) >= int("80"):
-         mise_val = mise
-      if int(POP_val) >= int("60"):
-         rain_val = POP_val
-      if float(WSD_val) >= int("17"):
-         wind_val = WSD_val
-      if float(TMX_val) >= int("34"):
-         heat_val = TMX_val
-      if float(TMN_val) <= int("12"):
-         cold_val = TMN_val
+            print(Ditem[2].text, fcstTime, TMN_val)
 
       return jsonify(
-         {'result': 'success', 'nickname': nick, 'wind': wind_val, 'rain': rain_val, 'heat': heat_val, 'cold': cold_val, 'cold_pm': TMN_val, 'heat_pm': TMX_val,
-          'mise': mise_val, 'mise_pm': mise, 'rain_true': rain_true,'mise_true': mise_true,'heat_true': heat_true,'cold_true': cold_true,'wind_true': wind_true})
+         {'result': 'success', 'nickname': nick, 'wind': float(WSD_val), 'rain': float(POP_val), 'cold': float(TMN_val),
+          'heat': float(TMX_val),
+          'mise': int(mise), 'rain_true': rain_true, 'mise_true': mise_true, 'heat_true': heat_true,
+          'cold_true': cold_true, 'wind_true': wind_true,'address': address,'date': date, 'time': fcstTime})
 
    except jwt.ExpiredSignatureError:
       # 위를 실행했는데 만료시간이 지났으면 에러가 납니다.
-      return jsonify({'result': 'fail', 'msg':'로그인 시간이 만료되었습니다.'})
+      return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
 
 
 @app.route('/api/setting', methods=['POST'])
@@ -334,10 +317,12 @@ def api_setting():
    wind_receive = request.form['wind_give']
    address_receive = request.form['address_give']
 
+   print(nick_receive)
    db.user.update_one({'nick': nick_receive}, {'$set': {'rain': rain_receive, 'mise': mise_receive,
                                                         'heat': heat_receive, 'cold': cold_receive,
-                                                        'wind': wind_receive,
-                                                        'address': address_receive}})
+                                                        'wind': wind_receive}})
+   if address_receive  != '':
+      db.user.update_one({'nick': nick_receive}, {'$set': {'address': address_receive}})
 
 
    return jsonify({'result': 'success'})
