@@ -18,7 +18,7 @@
                     <div class="group">
                         <h3 class="heading">회원 정보 수정</h3>
                     </div>
-                    
+
                     <div class="group control">
                         <label for='rain'><input type="checkbox" id="rain" /> 강수량이 60% 이상일 때</label>
                     </div>
@@ -31,13 +31,10 @@
                         <label for='heat'><input type="checkbox" id="heat" /> 폭염</label>
                         <label for='cold'><input type="checkbox" id="cold" /> 한파</label>
                         <label for='wind'><input type="checkbox" id="wind" /> 태풍</label>
-                        
+
                     </div>
-                    <div class="group control mail">
-                        <label for='email' >메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" id="email" /> </label>
-                        
-                    </div>
-                    
+                   
+
 
                     <div class="group m20">
 
@@ -88,7 +85,7 @@
                                 // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
                                 kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
 
-                                    // 클릭한 위도, 경도 정보를 가져옵니다 
+                                    // 클릭한 위도, 경도 정보를 가져옵니다
                                     var latlng = mouseEvent.latLng;
 
                                     // 마커 위치를 클릭한 위치로 옮깁니다
