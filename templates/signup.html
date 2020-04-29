@@ -58,7 +58,7 @@
 
                     geocoder.addressSearch(address, function (result, status) {
 
-                        // 정상적으로 검색이 완료됐으면 
+                        // 정상적으로 검색이 완료됐으면
                         if (status === kakao.maps.services.Status.OK) {
 
                             let coords = new kakao.maps.LatLng(result[0].y, result[0].x);
@@ -118,7 +118,7 @@
             let heat_give = $("input:checkbox[name='heat']").is(":checked")
             let cold_give = $("input:checkbox[name='cold']").is(":checked")
             let wind_give = $("input:checkbox[name='wind']").is(":checked")
-            let email_give = $("input:checkbox[name='email']").is(":checked")
+
             let address_give = $('#input-q1').val()
 
             $.ajax({
@@ -126,7 +126,7 @@
                 url: "/api/signup",
                 data: {
                     id_give: $('.userid').val(), pw_give: $('.userpw').val(), nickname_give: $('.usernick').val(),
-                    rain_give, mise_give, heat_give, cold_give, wind_give, email_give, address_give
+                    rain_give, mise_give, heat_give, cold_give, wind_give, address_give
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
@@ -174,10 +174,7 @@
                     <label for='cold'><input type="checkbox" name="cold" value="cold" class="cold" /> 한파</label>
                     <label for='wind'><input type="checkbox" name="wind" value="wind" class="wind" /> 태풍</label>
                 </div>
-                <div class="group control mail">
 
-                    메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" name="email" value="email" class="email" />
-                </div>
 
                 <div id="map" style="width:600px;height:200px;"></div>
 
