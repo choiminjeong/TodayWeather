@@ -7,119 +7,150 @@
     <title>Today's Weather</title>
     <link rel="stylesheet" href="../static/css/signup.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=639d5ba0fcd020dd1f17e9d015abed9b&libraries=services"></script>
+    <script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e2a7192e4eccd0a3b0a172b40564af65"></script>
+
+    <script>
+         $(document).ready(function () {
+            $.ajax({
+				type: "POST",
+				url: "/api/nick",
+				headers: { 'token_give': $.cookie('mytoken') },
+				data: {},
+				success: function (response) {
+					if (response['result'] == 'success') {
+						// 올바른 결과값을 받으면 nickname을 입력해줍니다.
+						$('#nickname').text(response['nickname'])
+                        if (response['rain_true'] == 'true') {
+						    $("input:checkbox[id='rain']").prop("checked", true); }
+						if (response['mise_true'] == 'true') {
+						    $("input:checkbox[id='mise']").prop("checked", true); } 
+                        if (response['heat_true'] == 'true') {
+						    $("input:checkbox[id='heat']").prop("checked", true); }
+                        if (response['cold_true'] == 'true') {
+						    $("input:checkbox[id='cold']").prop("checked", true); }
+                        if (response['wind_true'] == 'true') {
+						    $("input:checkbox[id='wind']").prop("checked", true); }
+                        }
+            }})
+         });
+</script>
+<script>
+        function setting() {
+            let nick_give = $('#nickname').text()
+            let rain_give = $("input:checkbox[name='rain']").is(":checked")
+            let mise_give = $("input:checkbox[name='mise']").is(":checked")
+            let heat_give = $("input:checkbox[name='heat']").is(":checked")
+            let cold_give = $("input:checkbox[name='cold']").is(":checked")
+            let wind_give = $("input:checkbox[name='wind']").is(":checked")
+            let email_give = $("input:checkbox[name='email']").is(":checked")
+            let address_give = $('#input-q1').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/api/setting",
+                data: {
+                    'nick_give': nick_give, 'rain_give': rain_give, 'mise_give': mise_give, 'heat_give': heat_give, 'cold_give': cold_give, 'wind_give': wind_give, 'email_give': email_give,
+                    'address_give': address_give
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('수정이 완료되었습니다.')
+                        console.log(response['rain_give'])
+                        window.location.href = '/login'
+                    } else {
+                        alert("수정에 실패했습니다")
+                    }
+                }
+            })
+        }
+    </script>
 </head>
 
 <body>
-
     <div class="container">
         <div class="form">
             <div class="form-section">
-                <form action="">
-                    <div class="group">
-                        <h3 class="heading">회원 정보 수정</h3>
-                    </div>
-                    
-                    <div class="group control">
-                        <label for='rain'><input type="checkbox" id="rain" /> 강수량이 60% 이상일 때</label>
-                    </div>
+                <div class="group">
+                    <h3 class="heading">회원 정보 수정</h3>
+                </div>
+                <div class="group control">
+                    안녕하세요 <span class="usernick" name="usernick" id="nickname"></span>님
+                </div>
+                <div class="group control">
+                    <label for='rain'><input type="checkbox" name="rain" value="rain" id="rain" /> 강수량이 60% 이상일 때</label>
+                </div>
+                <div class="group control">
+                    <label for='mise'><input type="checkbox" name="mise" value="mise" id="mise" /> 미세먼지가 '나쁨'일 때</label>
+                </div>
+                <div class="group control">
+                    <label for='heat'><input type="checkbox" name="heat" value="heat" id="heat" /> 폭염</label>
+                    <label for='cold'><input type="checkbox" name="cold" value="cold" id="cold" /> 한파</label>
+                    <label for='wind'><input type="checkbox" name="wind" value="wind" id="wind" /> 태풍</label>
+                </div>
 
-                    <div class="group control">
-                        <label for='mise'><input type="checkbox" id="mise" /> 미세먼지가 '나쁨'일 때</label>
-                    </div>
+                <div id="map" style="width:600px;height:200px;"></div>
 
-                    <div class="group control">
-                        <label for='heat'><input type="checkbox" id="heat" /> 폭염</label>
-                        <label for='cold'><input type="checkbox" id="cold" /> 한파</label>
-                        <label for='wind'><input type="checkbox" id="wind" /> 태풍</label>
-                        
-                    </div>
-                    <div class="group control mail">
-                        <label for='email' >메일로 알람을 받습니다&nbsp;&nbsp;&nbsp;<input type="checkbox" id="email" /> </label>
-                        
-                    </div>
-                    
+                <script>
+                    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                        mapOption = {
+                            center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+                            level: 3 // 지도의 확대 레벨
+                        };
 
-                    <div class="group m20">
-
-                        <!-- <input type="submit" onclick="login.html" name="name" class="btn" value="가입 완료"> -->
-                    </div>
-
-                    <div id="map" style="width:600px;height:350px;"></div>
-                    <script type="text/javascript"
-                        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=e2a7192e4eccd0a3b0a172b40564af65"></script>
-                    <script type="text/javascript">
-                        document.addEventListener("DOMContentLoaded", function () {
-                            function getLocation(position) {
-
-                                var latitud = position.coords.latitude;
-                                var longitude = position.coords.longitude;
-
-                                var mapContainer = document.getElementById("map")    // 지도를 표시할 DIV
-                                var mapOption = {
-                                    center: new kakao.maps.LatLng(latitud, longitude)    // 지도의 중심좌표
-                                    , level: 3    // 지도의 확대레벨
-                                };
-
-                                // 지도를 생성
-                                var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                                // 마커가 표시될 위치
-                                var markerPosition = new kakao.maps.LatLng(latitud, longitude);
-
-                                // 마커를 생성
-                                var marker = new kakao.maps.Marker({ position: markerPosition });
-
-                                // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-                                var mapTypeControl = new kakao.maps.MapTypeControl();
-
-                                // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
-                                // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
-                                map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-                                // 지도에 확대 축소 컨트롤을 생성한다
-                                var zoomControl = new kakao.maps.ZoomControl();
-
-                                // 지도의 우측에 확대 축소 컨트롤을 추가한다
-                                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-                                marker.setMap(map);
-
-                                // 지도에 클릭 이벤트를 등록합니다
-                                // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-                                kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-
-                                    // 클릭한 위도, 경도 정보를 가져옵니다 
-                                    var latlng = mouseEvent.latLng;
-
-                                    // 마커 위치를 클릭한 위치로 옮깁니다
-                                    marker.setPosition(latlng);
-
-                                    var resultDiv = document.getElementById('clickLatlng');
-
+                    // 지도를 생성합니다
+                    var map = new kakao.maps.Map(mapContainer, mapOption);
+                    // 주소-좌표 변환 객체를 생성합니다
+                    var geocoder = new kakao.maps.services.Geocoder();
+                    // 주소로 좌표를 검색합니다
+                    var markerPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+                    var marker = new kakao.maps.Marker({ position: markerPosition })
+                    var infowindow = new kakao.maps.InfoWindow
+                    marker.setMap(map);
+                    function q1() {
+                        marker.setMap(null);
+                        infowindow.close();
+                        var address = $('#input-q1').val();
+                        geocoder.addressSearch(address, function (result, status) {
+                            // 정상적으로 검색이 완료됐으면
+                            if (status === kakao.maps.services.Status.OK) {
+                                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                                // 결과값으로 받은 위치를 마커로 표시합니다
+                                marker = new kakao.maps.Marker({
+                                    map: map,
+                                    position: coords
                                 });
-
-                            }
-
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(getLocation, function (error) {
-                                    consol.log(error.message);
+                                // 인포윈도우로 장소에 대한 설명을 표시합니다
+                                infowindow = new kakao.maps.InfoWindow({
+                                    content: '<div style="width:150px;text-align:center;padding:6px 0;">' + address + '</div>'
                                 });
-                            } else {
-                                consol.log("Geolocation을 지원하지 않는 브라우저 입니다.");
+                                infowindow.open(map, marker);
+                                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                                map.setCenter(coords);
                             }
                         });
+                    }
+                </script>
 
-                    </script>
+                <input id="input-q1" type="text" placeholder="예)서울특별시 종로구 혜화동" /><button onclick="q1()">검색</button>
 
-                    <div class="group m20">
-                        <a href="./relogin.html" class="btn" >수정 완료</a>
-                    </div>
-                </form>
+                <div class="group m20">
+                    <button onclick="setting()" class="btn">수정 완료</button>
+                </div>
             </div>
         </div>
     </div>
-
-
 
 </body>
 
