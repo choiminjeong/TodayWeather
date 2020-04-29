@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Singup Form</title>
-  
+
   <link rel="stylesheet" href="../static/css/login.css">
   <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400" rel="stylesheet">
 
@@ -13,7 +13,7 @@
 
   <!-- 쿠키 사용을 위한 Jquery-cookie 임포트 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -41,11 +41,12 @@
             window.location.href = '/'
           } else {
             // 로그인이 안되면 에러메시지를 띄웁니다.
+            console.log('fail')
             alert(response['msg'])
           }
         }
       })
-     
+
     }
 
 
