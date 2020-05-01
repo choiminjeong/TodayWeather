@@ -32,7 +32,7 @@
                     if (response['result'] == 'success') {
                         // 올바른 결과값을 받으면 nickname을 입력해줍니다.
                         $('#usernick').text(response['nickname'])
-                        $('#q1').text(response['address'])
+                        $('.q1').text(response['address'])
                         if (response['rain_true'] == 'true') {
                             $("input:checkbox[id='rain']").prop("checked", true);
                         }
@@ -148,7 +148,7 @@
                     }
                 </script>
 
-                <input  type="text" id="input-q1"/><button onclick="q1()">검색</button>
+                <input  type="text" id="input-q1" class="q1"/><button onclick="q1()">검색</button>
 
                 <div class="group m20">
                     <button onclick="setting()" class="btn">수정 완료</button>
